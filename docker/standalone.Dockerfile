@@ -6,7 +6,7 @@
 # considerably smaller because it doesn't need to have Golang installed.
 ARG BUILDER_IMAGE=docker.io/golang:1.24.4-alpine
 ARG RUNTIME_IMAGE=docker.io/alpine:3.19
-ARG TARGETOS
+ARG TARGETOS=linux
 ARG TARGETARCH
 # Use build args to override the maximum square size of the docker image e.g.
 # docker build --build-arg MAX_SQUARE_SIZE=64 -t celestia-app:latest .
@@ -20,6 +20,10 @@ ARG UPGRADE_HEIGHT_DELAY
 # See https://github.com/hadolint/hadolint/issues/339
 # hadolint ignore=DL3006
 FROM --platform=$BUILDPLATFORM ${BUILDER_IMAGE} AS builder
+ARG TARGETOS
+ARG TARGETARCH
+ENV GOOS=${TARGETOS}
+ENV GOARCH=${TARGETARCH}
 ENV CGO_ENABLED=0
 ENV GO111MODULE=on
 # hadolint ignore=DL3018
@@ -47,7 +51,7 @@ RUN uname -a &&\
 # Ignore hadolint rule because hadolint can't parse the variable.
 # See https://github.com/hadolint/hadolint/issues/339
 # hadolint ignore=DL3006
-FROM ${RUNTIME_IMAGE} AS runtime
+FROM --platform=${TARGETOS}/${TARGETARCH} ${RUNTIME_IMAGE} AS runtime
 # Use UID 10,001 because UIDs below 10,000 are a security risk.
 # Ref: https://github.com/hexops/dockerfile/blob/main/README.md#do-not-use-a-uid-below-10000
 ARG UID=10001
