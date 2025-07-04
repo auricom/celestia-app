@@ -19,7 +19,7 @@ ARG UPGRADE_HEIGHT_DELAY
 # Ignore hadolint rule because hadolint can't parse the variable.
 # See https://github.com/hadolint/hadolint/issues/339
 # hadolint ignore=DL3006
-FROM --platform=$BUILDPLATFORM ${BUILDER_IMAGE} AS builder
+FROM ${BUILDER_IMAGE} AS builder
 ARG TARGETOS
 ARG TARGETARCH
 ENV GOOS=${TARGETOS}
@@ -52,7 +52,7 @@ RUN uname -a &&\
 # Ignore hadolint rule because hadolint can't parse the variable.
 # See https://github.com/hadolint/hadolint/issues/339
 # hadolint ignore=DL3006
-FROM --platform=${TARGETOS}/${TARGETARCH} ${RUNTIME_IMAGE} AS runtime
+FROM ${RUNTIME_IMAGE} AS runtime
 # Use UID 10,001 because UIDs below 10,000 are a security risk.
 # Ref: https://github.com/hexops/dockerfile/blob/main/README.md#do-not-use-a-uid-below-10000
 ARG UID=10001

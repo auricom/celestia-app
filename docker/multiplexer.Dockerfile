@@ -21,13 +21,13 @@ ARG CELESTIA_APP_REPOSITORY=ghcr.io/auricom/celestia-app-standalone
 ARG CELESTIA_VERSION="v3.10.3"
 
 # Stage 1: this base image contains already released binaries which can be embedded in the multiplexer.
-FROM --platform=${TARGETOS}/${TARGETARCH} ${CELESTIA_APP_REPOSITORY}:${CELESTIA_VERSION} AS base
+FROM ${CELESTIA_APP_REPOSITORY}:${CELESTIA_VERSION} AS base
 
 # Stage 2: Build the celestia-appd binary inside a builder image that will be discarded later.
 # Ignore hadolint rule because hadolint can't parse the variable.
 # See https://github.com/hadolint/hadolint/issues/339
 # hadolint ignore=DL3006
-FROM --platform=$BUILDPLATFORM ${BUILDER_IMAGE} AS builder
+FROM ${BUILDER_IMAGE} AS builder
 
 # must be specified for this build step in order for propagation of values.
 ARG TARGETOS
@@ -75,7 +75,7 @@ RUN uname -a &&\
 # Ignore hadolint rule because hadolint can't parse the variable.
 # See https://github.com/hadolint/hadolint/issues/339
 # hadolint ignore=DL3006
-FROM --platform=${TARGETOS}/${TARGETARCH} ${RUNTIME_IMAGE} AS runtime
+FROM ${RUNTIME_IMAGE} AS runtime
 # Use UID 10,001 because UIDs below 10,000 are a security risk.
 # Ref: https://github.com/hexops/dockerfile/blob/main/README.md#do-not-use-a-uid-below-10000
 ARG UID=10001
