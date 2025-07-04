@@ -6,7 +6,7 @@
 # considerably smaller because it doesn't need to have Golang installed.
 ARG BUILDER_IMAGE=docker.io/golang:1.24.4-alpine
 ARG RUNTIME_IMAGE=docker.io/alpine:3.19
-ARG TARGETOS=linux
+ARG TARGETOS
 ARG TARGETARCH
 # Use build args to override the maximum square size of the docker image e.g.
 # docker build --build-arg MAX_SQUARE_SIZE=64 -t celestia-app:latest .
