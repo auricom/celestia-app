@@ -32,6 +32,8 @@ FROM --platform=$BUILDPLATFORM ${BUILDER_IMAGE} AS builder
 # must be specified for this build step in order for propagation of values.
 ARG TARGETOS
 ARG TARGETARCH
+ENV GOOS=${TARGETOS}
+ENV GOARCH=${TARGETARCH}
 
 # The multiplexer must be built with both TARGETOS and TARGETARCH build arguments
 # as the location of the embedded binary is derived from these values.
@@ -40,8 +42,7 @@ RUN test -n "$TARGETARCH" || (echo "TARGETARCH is required but not set" && exit 
 
 ENV CGO_ENABLED=0
 ENV GO111MODULE=on
-ENV GOOS=${TARGETOS}
-ENV GOARCH=${TARGETARCH}
+
 # hadolint ignore=DL3018
 RUN apk update && apk add --no-cache \
     gcc \
